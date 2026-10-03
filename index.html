@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<title>Autorização BTG — 2ª Serventia</title>
+<style>
+  body{font-family:Verdana,Arial,sans-serif;background:#f5f1e8;color:#222;margin:0;padding:24px;font-size:18px;line-height:1.6}
+  .box{max-width:720px;margin:40px auto;background:#fff;border:2px solid #9c7a3c;border-radius:12px;padding:28px}
+  h1{font-size:24px;color:#3b3b3b;margin:0 0 12px}
+  #codigo{display:block;width:100%;box-sizing:border-box;font-family:Consolas,monospace;font-size:18px;padding:14px;border:1px solid #999;border-radius:8px;background:#fafafa;word-break:break-all}
+  button{margin-top:16px;font-size:20px;padding:12px 24px;border-radius:8px;border:0;background:#3b3b3b;color:#fff;cursor:pointer}
+  .ok{color:#1b7f3b;font-weight:bold;margin-top:12px;min-height:1.6em}
+  .erro{color:#b00020;font-weight:bold}
+  small{color:#666}
+</style>
+</head>
+<body>
+<div class="box">
+  <h1>Autorização do BTG — AGENTE-NOTARIO</h1>
+  <div id="conteudo">Lendo a resposta do banco…</div>
+  <p><small>Esta página não envia nada a lugar nenhum: só mostra o código que o BTG devolveu no endereço,
+  para ser colado na janela do <b>AUTORIZAR_BTG</b>. O código vale uma única vez e expira em poucos minutos.</small></p>
+</div>
+<script>
+  var p = new URLSearchParams(location.search), c = document.getElementById('conteudo');
+  if (p.get('code')) {
+    c.innerHTML = '<p>Copie o código abaixo e cole na janela <b>AUTORIZAR_BTG</b> do computador:</p>' +
+      '<textarea id="codigo" rows="3" readonly></textarea><button id="b">Copiar código</button><div class="ok" id="m"></div>';
+    var t = document.getElementById('codigo'); t.value = p.get('code');
+    document.getElementById('b').onclick = function(){ t.select(); try{navigator.clipboard.writeText(t.value);}catch(e){document.execCommand('copy');}
+      document.getElementById('m').textContent = 'Código copiado. Agora cole na janela AUTORIZAR_BTG (botão direito ou Ctrl+V) e tecle Enter.'; };
+    history.replaceState(null, '', location.pathname);
+  } else if (p.get('error')) {
+    c.innerHTML = '<p class="erro">O BTG não autorizou: ' + (p.get('error_description') || p.get('error')).replace(/[<>]/g,'') + '</p>';
+  } else {
+    c.innerHTML = '<p>Nenhum código recebido. Abra esta página pelo AUTORIZAR_BTG.</p>';
+  }
+</script>
+</body>
+</html>
